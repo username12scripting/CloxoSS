@@ -1,0 +1,105 @@
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- Main GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "ExecutorGUI"
+gui.Parent = playerGui
+gui.ResetOnSpawn = false
+
+-- Draggable Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 200)
+frame.Position = UDim2.new(0.5, -200, 0.5, -100)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- Title Bar
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+title.Text = "CloxoSS"
+title.Font = Enum.Font.JosefinSans
+title.TextSize = 18
+title.TextColor3 = Color3.new(1,1,1)
+title.Parent = frame
+
+-- Input Box
+local inputBox = Instance.new("TextBox")
+inputBox.Size = UDim2.new(1, -20, 0, 80)
+inputBox.Position = UDim2.new(0, 10, 0, 40)
+inputBox.PlaceholderText = "Enter require(assetId)..."
+inputBox.Text = ""
+inputBox.ClearTextOnFocus = false
+inputBox.TextColor3 = Color3.new(1,1,1)
+inputBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+inputBox.TextWrapped = true
+inputBox.TextYAlignment = Enum.TextYAlignment.Top
+inputBox.TextXAlignment = Enum.TextXAlignment.Left
+inputBox.Font = Enum.Font.Code
+inputBox.TextSize = 14
+inputBox.Parent = frame
+
+-- Execute Button
+local executeButton = Instance.new("TextButton")
+executeButton.Size = UDim2.new(0, 100, 0, 35)
+executeButton.Position = UDim2.new(0, 10, 0, 135)
+executeButton.Text = "Execute"
+executeButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+executeButton.TextColor3 = Color3.new(1,1,1)
+executeButton.Font = Enum.Font.GothamBold
+executeButton.TextSize = 16
+executeButton.Parent = frame
+
+-- Helper: Make descendants draggable
+local function makeDraggable(guiObj)
+	if guiObj:IsA("GuiObject") then
+		guiObj.Active = true
+		guiObj.Draggable = true
+	end
+	for _, desc in pairs(guiObj:GetDescendants()) do
+		if desc:IsA("GuiObject") then
+			desc.Active = true
+		end
+	end
+end
+
+-- Executor Function
+executeButton.MouseButton1Click:Connect(function()
+	local scriptText = inputBox.Text
+	local assetId = scriptText:match("require%s*%(?%s*(%d+)%s*%)?")
+	
+	if assetId then
+		local success, result = pcall(function()
+			local objects = game:GetObjects("rbxassetid://" .. assetId)
+			local obj = objects[1]
+			if obj then
+				obj.Parent = playerGui
+
+				-- Make GUI draggable if applicable
+				if obj:IsA("ScreenGui") or obj:IsA("GuiObject") then
+					makeDraggable(obj)
+				end
+
+				-- Require if ModuleScript
+				if obj:IsA("ModuleScript") then
+					local modSuccess, modResult = pcall(function()
+						return require(obj)
+					end)
+					if not modSuccess then
+						warn("Error requiring module:", modResult)
+					end
+				end
+			end
+		end)
+
+		if not success then
+			warn("Error loading asset:", result)
+		end
+	else
+		warn("Invalid require statement.")
+	end
+end)
