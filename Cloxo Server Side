@@ -54,7 +54,7 @@ executeButton.Font = Enum.Font.GothamBold
 executeButton.TextSize = 16
 executeButton.Parent = frame
 
--- Helper: Make descendants draggable
+-- Make descendants draggable
 local function makeDraggable(guiObj)
 	if guiObj:IsA("GuiObject") then
 		guiObj.Active = true
@@ -67,39 +67,51 @@ local function makeDraggable(guiObj)
 	end
 end
 
--- Executor Function
+-- Execute Button Logic
 executeButton.MouseButton1Click:Connect(function()
 	local scriptText = inputBox.Text
 	local assetId = scriptText:match("require%s*%(?%s*(%d+)%s*%)?")
-	
-	if assetId then
-		local success, result = pcall(function()
-			local objects = game:GetObjects("rbxassetid://" .. assetId)
-			local obj = objects[1]
-			if obj then
-				obj.Parent = playerGui
 
-				-- Make GUI draggable if applicable
-				if obj:IsA("ScreenGui") or obj:IsA("GuiObject") then
-					makeDraggable(obj)
-				end
+	if not assetId then
+		warn("Invalid require format. Use: require(AssetId)")
+		return
+	end
 
-				-- Require if ModuleScript
-				if obj:IsA("ModuleScript") then
-					local modSuccess, modResult = pcall(function()
-						return require(obj)
-					end)
-					if not modSuccess then
-						warn("Error requiring module:", modResult)
-					end
-				end
-			end
+	local success, objects = pcall(function()
+		return game:GetObjects("rbxassetid://" .. assetId)
+	end)
+
+	if not success or not objects or #objects == 0 then
+		warn("Failed to load asset with ID:", assetId)
+		return
+	end
+
+	local obj = objects[1]
+	print("Loaded object:", obj.Name, obj.ClassName)
+
+	if obj:IsA("ModuleScript") then
+		local modSuccess, modResult = pcall(function()
+			return require(obj)
 		end)
 
-		if not success then
-			warn("Error loading asset:", result)
+		if modSuccess then
+			print("Module required successfully. Return type:", typeof(modResult))
+			if typeof(modResult) == "function" then
+				local funcSuccess, funcResult = pcall(modResult)
+				if funcSuccess then
+					print("Function returned:", funcResult)
+				else
+					warn("Error running returned function:", funcResult)
+				end
+			end
+		else
+			warn("Error requiring module:", modResult)
 		end
+	elseif obj:IsA("ScreenGui") or obj:IsA("GuiObject") then
+		obj.Parent = playerGui
+		makeDraggable(obj)
+		print("GUI object inserted and draggable.")
 	else
-		warn("Invalid require statement.")
+		warn("Unsupported asset type:", obj.ClassName)
 	end
 end)
