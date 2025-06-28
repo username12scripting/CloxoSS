@@ -1,4 +1,4 @@
--- GUI Executor Styled Like Image
+-- GUI 2 LUA
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
@@ -22,7 +22,7 @@ frame.Parent = gui
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
 title.BackgroundTransparency = 1
-title.Text = "CLOXOSS"
+title.Text = "SERVERSIDE OR FE BYPASS EXECUTOR"
 title.Font = Enum.Font.LuckiestGuy
 title.TextSize = 18
 title.TextColor3 = Color3.new(1, 1, 1)
