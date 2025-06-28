@@ -1,4 +1,4 @@
---Gui To Lua v3.60
+--Gui To Lua
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
@@ -55,6 +55,19 @@ executeButton.Font = Enum.Font.GothamBold
 executeButton.TextSize = 16
 executeButton.Parent = frame
 
+-- Helper: Make descendants draggable
+local function makeDraggable(guiObj)
+	if guiObj:IsA("GuiObject") then
+		guiObj.Active = true
+		guiObj.Draggable = true
+	end
+	for _, desc in pairs(guiObj:GetDescendants()) do
+		if desc:IsA("GuiObject") then
+			desc.Active = true
+		end
+	end
+end
+
 -- Executor Function
 executeButton.MouseButton1Click:Connect(function()
 	local scriptText = inputBox.Text
@@ -65,7 +78,14 @@ executeButton.MouseButton1Click:Connect(function()
 			local objects = game:GetObjects("rbxassetid://" .. assetId)
 			local obj = objects[1]
 			if obj then
-				-- Only handle ModuleScripts
+				obj.Parent = playerGui
+
+				-- Make GUI draggable if applicable
+				if obj:IsA("ScreenGui") or obj:IsA("GuiObject") then
+					makeDraggable(obj)
+				end
+
+				-- Require if ModuleScript
 				if obj:IsA("ModuleScript") then
 					local modSuccess, modResult = pcall(function()
 						return require(obj)
