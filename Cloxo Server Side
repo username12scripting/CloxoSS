@@ -1,15 +1,7 @@
---[=[
- d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
-88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
-88      88    88    88            odD'      88      88    88 88ooo88 
-88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    @uniquadev
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER 
-]=]
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
--- Main GUI
+-- Create main GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "ExecutorGUI"
 gui.ResetOnSpawn = false
@@ -19,8 +11,8 @@ gui.Parent = playerGui
 local toggleButton = Instance.new("TextButton")
 toggleButton.Size = UDim2.new(0, 100, 0, 30)
 toggleButton.Position = UDim2.new(0, 10, 0, 10)
-toggleButton.Text = "TOGGLE"
-toggleButton.Font = Enum.Font.LuckiestGuy
+toggleButton.Text = ""
+toggleButton.Font = Enum.Font.SourceSansBold
 toggleButton.TextSize = 14
 toggleButton.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
 toggleButton.TextColor3 = Color3.new(1, 1, 1)
@@ -28,8 +20,8 @@ toggleButton.Parent = gui
 
 -- Main Frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 350, 0, 200)
-frame.Position = UDim2.new(0.5, -175, 0.5, -100)
+frame.Size = UDim2.new(0, 250, 0, 180)
+frame.Position = UDim2.new(0.5, -125, 0.5, -90)
 frame.BackgroundColor3 = Color3.fromRGB(85, 85, 85)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -37,7 +29,7 @@ frame.Draggable = true
 frame.Visible = true
 frame.Parent = gui
 
--- Toggle Function
+-- Toggle functionality
 toggleButton.MouseButton1Click:Connect(function()
 	frame.Visible = not frame.Visible
 end)
@@ -45,61 +37,62 @@ end)
 -- Title Label
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 30)
+title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
-title.Text = "SERVERSIDE OR FE BYPASS EXECUTOR"
-title.Font = Enum.Font.LuckiestGuy
+title.Text = "serverside or fe bypass executor"
+title.Font = Enum.Font.SourceSansBold
 title.TextSize = 18
 title.TextColor3 = Color3.new(1, 1, 1)
 title.Parent = frame
 
 -- Input Box
 local inputBox = Instance.new("TextBox")
-inputBox.Size = UDim2.new(1, -20, 0, 40)
+inputBox.Size = UDim2.new(1, -20, 0, 35)
 inputBox.Position = UDim2.new(0, 10, 0, 40)
-inputBox.PlaceholderText = "ENTER REQUIRE"
+inputBox.PlaceholderText = "enter require"
 inputBox.Text = ""
 inputBox.ClearTextOnFocus = false
 inputBox.TextColor3 = Color3.new(0, 0, 0)
 inputBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 inputBox.TextWrapped = true
-inputBox.Font = Enum.Font.LuckiestGuy
+inputBox.Font = Enum.Font.SourceSansBold
 inputBox.TextSize = 14
 inputBox.TextXAlignment = Enum.TextXAlignment.Center
 inputBox.TextYAlignment = Enum.TextYAlignment.Center
 inputBox.Parent = frame
 
--- Clear Button
-local clearButton = Instance.new("TextButton")
-clearButton.Size = UDim2.new(1, -20, 0, 35)
-clearButton.Position = UDim2.new(0, 10, 0, 90)
-clearButton.Text = "CLEAR"
-clearButton.Font = Enum.Font.LuckiestGuy
-clearButton.TextSize = 18
-clearButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-clearButton.TextColor3 = Color3.new(1, 1, 1)
-clearButton.Parent = frame
-
 -- Execute Button
 local executeButton = Instance.new("TextButton")
 executeButton.Size = UDim2.new(1, -20, 0, 35)
-executeButton.Position = UDim2.new(0, 10, 0, 135)
-executeButton.Text = "EXECUTE REQUIRE"
-executeButton.Font = Enum.Font.LuckiestGuy
+executeButton.Position = UDim2.new(0, 10, 0, 85)
+executeButton.Text = "execute require"
+executeButton.Font = Enum.Font.SourceSansBold
 executeButton.TextSize = 18
 executeButton.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
 executeButton.TextColor3 = Color3.new(1, 1, 1)
 executeButton.Parent = frame
 
--- Clear Function
+-- Clear Button
+local clearButton = Instance.new("TextButton")
+clearButton.Size = UDim2.new(1, -20, 0, 35)
+clearButton.Position = UDim2.new(0, 10, 0, 130)
+clearButton.Text = "clear"
+clearButton.Font = Enum.Font.SourceSansBold
+clearButton.TextSize = 18
+clearButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+clearButton.TextColor3 = Color3.new(1, 1, 1)
+clearButton.Parent = frame
+
+-- Clear function
 clearButton.MouseButton1Click:Connect(function()
 	inputBox.Text = ""
 end)
 
--- Execute Function
+-- Fake "execute" function (doesn't do anything functional on FE)
 executeButton.MouseButton1Click:Connect(function()
 	local scriptText = inputBox.Text
 	local assetId = scriptText:match("require%s*%(?%s*(%d+)%s*%)?")
-
+	
 	if assetId then
 		local success, result = pcall(function()
 			local objects = game:GetObjects("rbxassetid://" .. assetId)
@@ -151,7 +144,7 @@ R.BackgroundTransparency = 1.000
 R.Position = UDim2.new(0.45430705, 0, 0.430432826, 0)
 R.Size = UDim2.new(0, 110, 0, 110)
 R.ZIndex = 3
-R.Image = "http://www.roblox.com/asset/?id=7102117818"
+R.Image = "http://www.roblox.com/asset/?id=138695263382341"
 R.SliceScale = 3.000
 
 Earth.Name = "Earth"
@@ -163,7 +156,7 @@ Earth.BorderSizePixel = 0
 Earth.Position = UDim2.new(0.404999346, 0, 0.406818181, 0)
 Earth.Size = UDim2.new(0, 20, 0, 20)
 Earth.ZIndex = 4
-Earth.Image = "rbxassetid://78137783929126"
+Earth.Image = "rbxassetid://138695263382341"
 
 Green.Name = "Green"
 Green.Parent = StigmanFroud
@@ -174,57 +167,60 @@ Green.BorderSizePixel = 0
 Green.Position = UDim2.new(0.00499999989, 0, 0.824999988, 0)
 Green.Size = UDim2.new(0, 110, 0, 110)
 Green.ZIndex = 6
-Green.Image = "rbxassetid://75554667916597"
+Green.Image = "rbxassetid://138695263382341"
 Green.ImageTransparency = 1.000
 
--- Animation for trajectory (rotating)
-local function AARC_fake_script()
+local function AARC_fake_script() -- trajectory.Info 
 	local script = Instance.new('LocalScript', trajectory)
+
 	local img = script.Parent
 	local sonic = script.Parent
 	
-	img:TweenPosition(UDim2.new(0.451, 0, 0.395, 0), "Out", "Linear", 0.4, false)
+	img:TweenPosition(UDim2.new(0.451, 0,0.395, 0), "Out", "Linear", 0.4, false)
 	wait(3)
-	img:TweenPosition(UDim2.new(0.005, 0, 0.619, 0), "Out", "Sine", 0.7, false)
+	img:TweenPosition(UDim2.new(0.005, 0,0.619, 0), "Out", "Sine", 0.7, false)
+	
+	
 	
 	while true do
 		wait(0.01)
-		sonic.Rotation = sonic.Rotation + 0.3
+		sonic.Rotation = sonic.Rotation +0.3
 	end
+	
+	
 end
 coroutine.wrap(AARC_fake_script)()
-
--- Animation for Earth (orbiting)
-local function LQERQ_fake_script()
+local function LQERQ_fake_script() -- Earth.LocalScript 
 	local script = Instance.new('LocalScript', Earth)
-	local Angle = 0
-	local AngleIncrement = 0.02
-	local OriginPos = script.Parent.Position
-	local Distance = 55
+
+	local Angle = 0;
+	local AngleIncrement = 0.02;
+	local OriginPos = script.Parent.Position;
+	local Distance = 55;
 	
 	while wait() do
-		Angle = Angle + AngleIncrement
-		local dirX = math.cos(Angle)
-		local dirY = math.sin(Angle)
-		script.Parent.Position = OriginPos + UDim2.new(0, dirX * Distance, 0, dirY * Distance)
+		Angle = Angle + AngleIncrement;
+		local dirX = math.cos(Angle) -- X
+		local dirY = math.sin(Angle) -- Y
+		script.Parent.Position = OriginPos + UDim2.new(0, dirX * Distance, 0, dirY * Distance);
 	end
 end
 coroutine.wrap(LQERQ_fake_script)()
-
--- Animation for R (tween in and down)
-local function XBQODE_fake_script()
+local function XBQODE_fake_script() -- R.Info 
 	local script = Instance.new('LocalScript', R)
+
 	local img = script.Parent
 	
-	img:TweenPosition(UDim2.new(0.451, 0, 0.395, 0), "Out", "Linear", 0.4, false)
+	img:TweenPosition(UDim2.new(0.451, 0,0.395, 0), "Out", "Linear", 0.4, false)
 	wait(3)
-	img:TweenPosition(UDim2.new(0.005, 0, 0.619, 0), "Out", "Sine", 0.7, false)
+	img:TweenPosition(UDim2.new(0.005, 0,0.619, 0), "Out", "Sine", 0.7, false)
+	
+	
 end
 coroutine.wrap(XBQODE_fake_script)()
-
--- Blinking Green effect
-local function NSHDR_fake_script()
+local function NSHDR_fake_script() -- Green.LocalScript 
 	local script = Instance.new('LocalScript', Green)
+
 	local Tween = game:GetService("TweenService")
 	local Greenfn = script.Parent
 	wait(2)
@@ -232,37 +228,41 @@ local function NSHDR_fake_script()
 		local TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 0})
 		TranspncyTween:Play()
 		wait(0.3)
-		TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 1})
+		local TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 1})
 		TranspncyTween:Play()
 		wait(0.3)
-		TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 0})
+		local TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 0})
 		TranspncyTween:Play()
 		wait(0.3)
-		TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 1})
+		local TranspncyTween = Tween:Create(Greenfn, TweenInfo.new(0.5), {ImageTransparency = 1})
 		TranspncyTween:Play()
 		wait(4)
 	end
 end
 coroutine.wrap(NSHDR_fake_script)()
-
--- Tweening animation for Green (initial move)
-local function UDIRPT_fake_script()
+local function UDIRPT_fake_script() -- Green.Info 
 	local script = Instance.new('LocalScript', Green)
-	local img = script.Parent
-	
-	img:TweenPosition(UDim2.new(0.451, 0, 0.395, 0), "Out", "Linear", 0.4, false)
-	wait(3)
-	img:TweenPosition(UDim2.new(0.005, 0, 0.619, 0), "Out", "Sine", 0.7, false)
-end
-coroutine.wrap(UDIRPT_fake_script)()
 
--- Output welcome and game name
-local function WGFAMY_fake_script()
-	local script = Instance.new('LocalScript', StigmanFroud)
+	local img = script.Parent
 	local GetName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
 	
-	print("Loaded At", GetName.Name)
+	img:TweenPosition(UDim2.new(0.451, 0,0.395, 0), "Out", "Linear", 0.4, false)
+	wait(3)
+	img:TweenPosition(UDim2.new(0.005, 0,0.619, 0), "Out", "Sine", 0.7, false)
+	
+	
+	
+	
+end
+coroutine.wrap(UDIRPT_fake_script)()
+local function WGFAMY_fake_script() -- StigmanFroud.LocalScript 
+	local script = Instance.new('LocalScript', StigmanFroud)
+
+	local GetName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
+	
+	print("Loaded At",GetName.Name)
 	wait(0.1)
-	print("Welcome,", game.Players.LocalPlayer.Name)
+	print("Welcome,",game.Players.LocalPlayer.Name)
+	
 end
 coroutine.wrap(WGFAMY_fake_script)()
